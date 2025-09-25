@@ -8,9 +8,9 @@ const Careers = () => {
   return (
     <>
       <Header />
-      <div className="w-full min-h-screen flex flex-col items-center px-4 py-10">
+      <div className="w-full min-h-screen flex flex-col items-center px-4 py-5">
         {/* Heading */}
-        <h1 className="text-3xl font-semibold mb-4">CAREERS</h1>
+        <h1 className="text-3xl font-semibold mb-4">Careers</h1>
         <p className="text-center md:px-40 text-gray-600 mb-10"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse ratione, officia delectus consequuntur, dicta libero magni omnis architecto voluptas culpa praesentium ipsum assumenda quae dolor, nihil rerum fugit expedita corrupti. Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio maiores fuga, modi vel accusantium magnam ex, ratione aliquam eius odit consequuntur earum, itaque nulla labore veritatis quis autnn atque! Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem libero cupiditate, qui ab ducimus similique aut molestiae laborum dignissimos assumenda ipsam quis quos dolor facere quo, saepe vel optio minima!
         </p>
 
@@ -20,23 +20,19 @@ const Careers = () => {
 
           {/* Search bar */}
           <div className="flex items-center gap-2 mb-8">
-            <input
-              type="text"
-              placeholder="Job Title"
-              className="border border-gray-300 px-3 py-2 rounded-md flex-1"
-            />
+            <input type="text" placeholder="Job Title" className="border border-gray-300 px-3 py-2 rounded-md flex-1"/>
             <button className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700">
               Search
             </button>
           </div>
 
-          {/* Job Card */}
+          {/* duplicating Job Card */}
           <div className="bg-white shadow-md rounded-md p-5">
             <div className="flex justify-between items-center border-b pb-2 mb-4">
               <h3 className="font-semibold text-lg">Job Title</h3>
               <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center gap-1">
                 Apply
-              <FontAwesomeIcon size='2x' icon={faSquareArrowUpRight} /></button>
+                <FontAwesomeIcon size='2x' icon={faSquareArrowUpRight} /></button>
             </div>
 
             {/* Job Details */}
