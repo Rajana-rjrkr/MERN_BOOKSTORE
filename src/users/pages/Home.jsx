@@ -15,22 +15,22 @@ const Home = () => {
                 <div style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} className='w-full flex flex-col h-screen justify-center items-center'>
                     <h1 className='text-8xl font-bold'>Wonderful Gifts</h1>
                     <p>Give your family and friends a Book</p>
-                    <div className='mt-9 relative w-90'>
-                        <input className='border pl-10 pr-5 py-1 rounded-2xl bg-white text-black w-full' type="text" placeholder='Search Books Here....' />
-                        <button><FontAwesomeIcon className='absolute right-4 top-2 text-blue-500' icon={faMagnifyingGlass} /></button>
+                    <div className='mt-9'>
+                        <input className=' p-2 rounded-3xl bg-white placeholder-gray-500 w-100' type="text" placeholder='Search Books Here....' />
+                        <FontAwesomeIcon className=' text-blue-500' icon={faMagnifyingGlass} style={{marginLeft:"-40px"}}/>
                     </div>
                 </div>
             </div>
             {/* arrival  */}
-            <section className='p-5 flex flex-col justify-center items-center'>
+            <section className='md:px-40 p-5 flex flex-col justify-center items-center'>
                 <h4 className='text-2xl font-bold'>NEW ARRIVAL</h4>
-                <h1 className='text-3xl'>Explore Our Latest Collection</h1>
-                <div className="md:grid grid-cols-4 w-full mt-5 px-40">
+                <h1 className='text-3xl text-center'>Explore Our Latest Collection</h1>
+                <div className="md:grid grid-cols-4 w-full mt-5">
                     <div className="p-3">
                         <div className="shadow p-3 rounded">
-                            <img width={'100%'} src="https://m.media-amazon.com/images/I/617lxveUjYL._UF1000,1000_QL80_.jpg" alt="book" />
-                            <div className="flex flex-col justify-center items-center">
-                                <p className="text-blue-700">Author</p>
+                            <img width={'100%'} height={'300px'} src="https://m.media-amazon.com/images/I/617lxveUjYL._UF1000,1000_QL80_.jpg" alt="book" />
+                            <div className="flex flex-col justify-center items-center mt-4">
+                                <p className="text-blue-700 font-bold text-lg">Author</p>
                                 <p>Book Title</p>
                                 <p>$ 400</p>
                             </div>
@@ -38,7 +38,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="text-center my-5">
-                    <Link to='/all-books' className='text-white p-3 border bg-slate-900'>Explore More</Link>
+                    <Link to='/all-books' className='text-white p-3 border bg-slate-900'>Explore More...</Link>
                 </div>
             </section>
             {/* author  */}

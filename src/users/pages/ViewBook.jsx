@@ -42,18 +42,19 @@ const ViewBook = () => {
                     </div>
                 </div>
             </div>
+
             {/* Modal */}
             {
                 modalStatus &&
                 <div className="relative z-10" onClick={() => setModalStatus(false)}>
                     <div className="bg-gray-500/75 fixed inset-0">
                         <div className='flex justify-center items-center min-h-screen '>
-                            <div style={{ width: '900px' }} className='bg-white rounded-2xl'>
-                                <div className="bg-black text-white flex justify-between items-center p-3">
+                            <div className='bg-white rounded-sm md:w-250 w-100'>
+                                <div className="bg-slate-900 text-white flex justify-between rounded-sm items-center p-3">
                                     <h1>Book Images</h1>
                                     <FontAwesomeIcon onClick={() => setModalStatus(false)} icon={faXmark} />
                                 </div>
-                                <div className='my-5 ml-5'>
+                                <div className='my-5 ml-5 '>
                                     <p className='text-blue-700 my-5 ml-5'>
                                         <FontAwesomeIcon icon={faCamera} className="me-2" />
                                         Camera click of the book in the hands of Seller
