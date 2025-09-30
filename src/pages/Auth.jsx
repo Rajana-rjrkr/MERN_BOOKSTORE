@@ -1,11 +1,12 @@
-import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 
-
 const Auth = ({ register }) => {
+  const [viewPasswordStatus, setViewPasswordStatus] = useState(false)
+  const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "" })
   return (
     <>
       <div className='w-full min-h-screen bg-cover flex-col bg-center flex justify-center items-center bg-[url(/login5.jpg)]'>
@@ -28,10 +29,16 @@ const Auth = ({ register }) => {
             <form className='my-5 w-full'>
               {
                 register &&
-                <input type="text" placeholder='User Name' className='bg-white text-black p-2 w-full rounded placeholder-gray-500 mb-3' />
+                <input value={userDetails.username} onChange={e => setUserDetails({ ...userDetails, username: e.target.value })} type="text" placeholder='User Name' className='bg-white text-black p-2 w-full rounded placeholder-gray-500 mb-3' />
               }
-              <input type="email" placeholder='Email ID' className='bg-white text-black p-2 w-full rounded placeholder-gray-500 mb-3' />
-              <input type="password" placeholder='Password' className='bg-white text-black p-2 w-full rounded placeholder-gray-500 mb-3' />
+              <input value={userDetails.email} onChange={e => setUserDetails({ ...userDetails, email: e.target.value })} type="email" placeholder='Email ID' className='bg-white text-black p-2 w-full rounded placeholder-gray-500 mb-3' />
+              <input value={userDetails.password} onChange={e => setUserDetails({ ...userDetails, password: e.target.value })} type={viewPasswordStatus?"text":"password"} placeholder='Password' className='bg-white text-black p-2 w-full rounded placeholder-gray-500 mb-3' />
+              {
+                !viewPasswordStatus ?
+                  <FontAwesomeIcon icon={faEye} onClick={()=>setViewPasswordStatus(!viewPasswordStatus)} style={{ marginLeft: "-30px" }} className='text-gray-400 cursor-pointer' />
+                  :
+                  <FontAwesomeIcon icon={faEyeSlash} onClick={()=>setViewPasswordStatus(!viewPasswordStatus)} style={{ marginLeft: "-30px" }} className='text-gray-400 cursor-pointer' />
+              }
               <div className="flex justify-between mb-5">
                 <p className='text-sm text-orange-300'>*Never share your password with others</p>
                 <button className='text-sm underline'>Forgot Password</button>
@@ -47,13 +54,13 @@ const Auth = ({ register }) => {
                 }
               </div>
               <div className='my-5 text-center'>
-                
+
                 {/* Google Authentication */}
                 {
                   register ?
-                    <p className='text-blue-600'>New Here? <Link to={'/register'} className="underline ms-5">Register</Link> </p>
+                    <p className='text-blue-600'>Are your already a user? <Link to={'/register'} className="underline ms-5">Login</Link> </p>
                     :
-                    <p className='text-blue-600'>Are your already a user? <Link to={'/login'} className="underline ms-5">Login</Link> </p>
+                    <p className='text-blue-600'>New Here? <Link to={'/login'} className="underline ms-5">Register</Link> </p>
                 }
               </div>
             </form>

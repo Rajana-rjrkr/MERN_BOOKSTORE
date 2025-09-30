@@ -19,7 +19,7 @@ const AdminSidebar = () => {
                         </div>
 
                         <div className="mt-3">
-                            <Link to={'/all-books'}><FontAwesomeIcon className='me-3' icon={faBook} />All Books</Link>
+                            <Link to={'/all-books'}><FontAwesomeIcon className='me-3' icon={faBook} />All Resources</Link>
                         </div>
 
                         <div className="mt-3">
