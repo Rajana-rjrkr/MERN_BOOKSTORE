@@ -1,23 +1,84 @@
 import { faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
+import { loginAPI, registerAPI } from '../services/allAPI'
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 
 const Auth = ({ register }) => {
+  const navigate = useNavigate()
   const [viewPasswordStatus, setViewPasswordStatus] = useState(false)
   const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "" })
 
   // console.log(userDetails);
 
-  const handleRegister = () => {
-    console.log('Inside handleRegister');
+
+  //register
+  const handleRegister = async () => {
+    // console.log('Inside handleRegister');
     const { username, email, password } = userDetails
     if (!username || !email || !password) {
       toast.info('Please fill the form completely')
     } else {
-      toast.success('Proceed to API call')
+      // toast.success('Proceed to API call')
+      try {
+        const result = await registerAPI(userDetails)
+        console.log(result);
+        if (result.status == 200) {
+          toast.success('Registered Successfully. Please Login!')
+          setUserDetails({ username: "", email: "", password: "" })
+          navigate('/login')
+        } else if (result.status == 409) {
+          toast.warning(result.response.data)
+          setUserDetails({ username: "", email: "", password: "" })
+          navigate('/login')
+        } else {
+          console.log(result);
+
+        }
+      } catch (err) {
+        console.log(err);
+
+      }
+    }
+  }
+
+  //login
+  const handleLogin = async () => {
+    const { email, password } = userDetails
+    if (!email || !password) {
+      toast.info("Please fill the form completely.")
+    } else {
+      try {
+        const result = await loginAPI(userDetails)
+        console.log(result);
+        if (result.status == 200) {
+          toast.success("Login Succesfully..")
+          sessionStorage.setItem("user", JSON.stringify(result.data.user))
+          sessionStorage.setItem("token", result.data.token)
+          setTimeout(() => {
+            if (result.data.user.role == "admin") {
+              navigate('/admin-dashboard')
+            } else {
+              navigate('/')
+            }
+          }, 2500);
+        } else if (result.status == 401) {
+          toast.warning(result.response.data)
+          setUserDetails({ username: "", email: "", password: "" })
+        } else if (result.status == 404) {
+          toast.warning(result.response.data)
+          setUserDetails({ username: "", email: "", password: "" })
+        } else {
+          toast.error("Something went wrong")
+          setUserDetails({ username: "", email: "", password: "" })
+        }
+      } catch (err) {
+        console.log(err);
+
+      }
     }
   }
 
@@ -66,17 +127,37 @@ const Auth = ({ register }) => {
                   register ?
                     <button onClick={handleRegister} type='button' className='bg-green-700 p-2 w-full rounded'>Register</button>
                     :
-                    <button type='button' className='bg-green-700 p-2 w-full rounded'>Login</button>
+                    <button onClick={handleLogin} type='button' className='bg-green-700 p-2 w-full rounded'>Login</button>
                 }
               </div>
-              <div className='my-5 text-center'>
 
+              <div className='my-5 text-center'>
                 {/* Google Authentication */}
+                <div className="text-center">
+                  {!register && <p className='mb-2'>---------------------------------or------------------------------------</p>}
+                  {
+                    !register &&
+                    <div className='my-4'>
+
+                      <GoogleOAuthProvider>
+                        <GoogleLogin
+                          onSuccess={credentialResponse => {
+                            console.log(credentialResponse);
+                          }}
+                          onError={() => {
+                            console.log('Login Failed');
+                          }}
+                        />
+                      </GoogleOAuthProvider>
+
+                    </div>
+                  }
+                </div>
                 {
                   register ?
-                    <p className='text-blue-600'>Are your already a user? <Link to={'/register'} className="underline ms-5">Login</Link> </p>
+                    <p className='text-blue-600'>Are your already a user? <Link to={'/login'} className="underline ms-5">Login</Link> </p>
                     :
-                    <p className='text-blue-600'>New Here? <Link to={'/login'} className="underline ms-5">Register</Link> </p>
+                    <p className='text-blue-600'>New Here? <Link to={'/register'} className="underline ms-5">Register</Link> </p>
                 }
               </div>
             </form>

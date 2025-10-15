@@ -19,11 +19,11 @@ const AdminSidebar = () => {
                         </div>
 
                         <div className="mt-3">
-                            <Link to={'/all-books'}><FontAwesomeIcon className='me-3' icon={faBook} />All Resources</Link>
+                            <Link to={'/admin-resources'}><FontAwesomeIcon className='me-3' icon={faBook} />All Resources</Link>
                         </div>
 
                         <div className="mt-3">
-                            <Link to={'/careers'}><FontAwesomeIcon icon={faBriefcase} className='me-3' />Careers</Link>
+                            <Link to={'/admin-careers'}><FontAwesomeIcon icon={faBriefcase} className='me-3' />Careers</Link>
                         </div>
 
                         <div className="mt-3">

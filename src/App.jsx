@@ -27,20 +27,22 @@ function App() {
   return (
     <>
       <Routes>
+        {/* users */}
         <Route path='/' element={loading ? <Preloader /> : <Home />} />
-        <Route path='/login' element={<Auth/>}/>
-        <Route path='/register' element={<Auth register />}/>
-        <Route path='/all-books' element={<AllBooks/>}/>
-        <Route path='/books/:id/view' element={<ViewBook/>}/>
-        <Route path='/profile' element={<Profile/>}/>
-        <Route path='/careers' element={<Careers/>}/>
-        <Route path='/contact' element={<Contact/>}/>
+        <Route path='/login' element={<Auth />} />
+        <Route path='/register' element={<Auth register />} />
+        <Route path='/all-books' element={<AllBooks />} />
+        <Route path='/books/:id/view' element={<ViewBook />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/careers' element={<Careers />} />
+        <Route path='/contact' element={<Contact />} />
 
+        {/* admin */}
         <Route path='/admin-dashboard' element={loading ? <Preloader /> : <AdminDashboard />} />
-        <Route path='/admin-resources' element={<ResourceAdmin/>}/>
-        <Route path='/admin-careers' element={<CareerAdmin/>}/>
-        <Route path='/admin-settings' element={<SettingsAdmin/>}/>
-        <Route path='/*' element={<Pnf/>}/>
+        <Route path='/admin-resources' element={<ResourceAdmin />} />
+        <Route path='/admin-careers' element={<CareerAdmin />} />
+        <Route path='/admin-settings' element={<SettingsAdmin />} />
+        <Route path='/*' element={<Pnf />} />
       </Routes>
 
     </>
