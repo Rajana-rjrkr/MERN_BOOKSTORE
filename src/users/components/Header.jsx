@@ -2,7 +2,7 @@ import { faFacebook, faInstagram, faLinkedin, faXTwitter } from '@fortawesome/fr
 import { faAddressCard, faBars, faPowerOff, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 const Header = () => {
@@ -10,7 +10,8 @@ const Header = () => {
     const [token, setToken] = useState("")
     const [userDp, setUserDp] = useState("")
     const [dropDownStatus, setDropDownStatus] = useState(false)
-
+    const navigate = useNavigate()
+    
     useEffect(() => {
         if (sessionStorage.getItem("token")) {
             const token = sessionStorage.getItem("token")
@@ -18,7 +19,15 @@ const Header = () => {
             const user = JSON.parse(sessionStorage.getItem("user"))
             setUserDp(user.profile)
         }
-    }, [])
+    }, [token])
+
+    const logout = () => {
+        sessionStorage.clear()
+        setToken("")
+        setUserDp("")
+        setdropDownStatus(false)
+        navigate('/')
+    }
 
     return (
         <>
@@ -44,13 +53,13 @@ const Header = () => {
                         :
                         <div className='relative inline-block text-left'>
                             <button onClick={() => setDropDownStatus(!dropDownStatus)} className='w-full px-3 py-2 bg-white shadow-xs hover:bg-gray-50'>
-                                <img width={'40px'} src={userDp == "" ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" : ""} alt="user" />
+                                <img width={'40px'} src={userDp == "" ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" : userDp.startsWith("https://lh3.googleusercontent.com")?userDp:"https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" } alt="user" />
                             </button>
                             {dropDownStatus &&
                                 <div className='absolute right-0 z-10 mt-2 w-40 origin-top-right bg-white shadow-lg ring-1 rounded-md ring-black/5 focus:outline-hidden'>
                                     <div className="py-1">
                                         <Link className='block px-4 py-2 text-sm text-gray-700' to={'/profile'}><FontAwesomeIcon icon={faAddressCard} className='me-2' />Profile</Link>
-                                        <button className='block px-4 py-2 text-sm text-gray-700'><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button>
+                                        <button onClick={logout} className='block px-4 py-2 text-sm text-gray-700'><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button>
                                     </div>
                                 </div>
                             }
