@@ -21,6 +21,9 @@ export const googleLoginAPI = async (reqBody)=>{
     return await commonAPI("POST",`${SERVERURL}/google-login`,reqBody)
 }
 // home page books api
+export const getHomeBookAPI = async ()=>{
+    return await commonAPI("GET",`${SERVERURL}/home-books`)
+}
 // all career api
 
 // ------------------------------------authorised user api - user------------------------------------------------//
@@ -28,8 +31,15 @@ export const googleLoginAPI = async (reqBody)=>{
 export const addBookAPI = async (reqBody,reqHeader)=>{
     return await commonAPI("POST",`${SERVERURL}/add-book`,reqBody,reqHeader)
 }
-// view all books
-// view single book
+
+// view all books - called by allbooks when page load
+export const getAllBooksAPI = async (reqHeader)=>{
+    return await commonAPI("GET",`${SERVERURL}/all-books`,{},reqHeader)
+}
+// view single book - called by view component when it load in browser
+export const getSingleBookAPI = async (bookId,reqHeader)=>{
+    return await commonAPI("GET",`${SERVERURL}/books/${bookId}/view`,{},reqHeader)
+}
 
 // profile update 
 // purchased book

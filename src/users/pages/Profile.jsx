@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faSquarePlus } from '@fortawesome/free-regular-svg-icons'
+import { toast, ToastContainer } from 'react-toastify'
+import { addBookAPI } from '../../services/allAPI'
 
 const Profile = () => {
   const [sellBookStatus, setSellBookStatus] = useState(true)
@@ -14,7 +16,13 @@ const Profile = () => {
   //console.log(bookDetails);
   const [preview, setPreview] = useState("")
   const [previewList, setPreviewList] = useState([])
+  const [token, setToken] = useState("")
 
+  useEffect(() => {
+    if (sessionStorage.getItem("token")) {
+      setToken(sessionStorage.getItem("token"))
+    }
+  }, [])
 
   const handleUploadBookImage = (e) => {
     // console.log(e.target.files[0]);
@@ -27,6 +35,59 @@ const Profile = () => {
     const bookImgArray = previewList
     bookImgArray.push(url)
     setPreviewList(bookImgArray)
+  }
+
+  const handleReset = () => {
+    setBookDetails({
+      title:"",author:"",noOfpages:"",imageUrl:"",price:"",discountPrice:"",abstract:"",publisher:"",languages:"",isbn:"",category:"",uploadImages:[]
+    })
+    setPreview("")
+    setPreviewList([])
+  }
+
+  const handleBookSubmit = async () => {
+    const { title, author, noOfpages, imageUrl, price, discountPrice, abstract, publisher, languages, isbn, category, uploadImages } = bookDetails
+
+    if (!title || !author || !noOfpages || !imageUrl || !price || !discountPrice || !abstract || !publisher || !languages || !isbn || !category || uploadImages.length == 0) {
+      toast.info("Please fill the form")
+    } else {
+      // api call
+      const reqHeader = {
+        "Authorization": `Bearer ${token}`
+      }
+
+      const reqBody = new FormData()
+      //append : reqBody.append(key,value)
+      for (let key in bookDetails) {
+        if (key != "uploadImages") {
+          reqBody.append(key, bookDetails[key])
+        } else {
+          bookDetails.uploadImages.forEach(img => {
+            reqBody.append("uploadImages", img)
+          })
+        }
+      }
+      try {
+        const result = await addBookAPI(reqBody, reqHeader)
+        console.log(result);
+        if (result.status == 401) {
+          toast.warning(result.response.data)
+          //clear all field
+          handleReset()
+        } else if (result.status == 200) {
+          toast.success("Book added successfully")
+          //clear all field
+          handleReset()
+        } else {
+          toast.error("Something went wrong")
+          //clear all field
+          handleReset()
+        }
+      } catch (err) {
+          console.log(err);
+          
+      }
+    }
   }
 
   return (
@@ -112,8 +173,8 @@ const Profile = () => {
                   {preview &&
                     <div className=" flex justify-center items-center">
                       {
-                        previewList?.map(imgUrl => (
-                          <img width={'70px'} height={'70px'} src={imgUrl} alt="book" className='mx-3' />
+                        previewList?.map((imgUrl,index) => (
+                          <img key={index} width={'70px'} height={'70px'} src={imgUrl} alt="book" className='mx-3' />
                         ))
                       }
                       {previewList.length < 3 &&
@@ -129,8 +190,8 @@ const Profile = () => {
 
               {/* footer  */}
               <div className="p-3 w-full flex md:justify-end justify-center my-8">
-                <button className='py-2 px-3 rounded text-white bg-gray-600 hover:bg-white hover:border hover:text-black'>Reset</button>
-                <button className='py-2 px-3 rounded text-white bg-blue-600 ms-3 hover:bg-white hover:border hover:text-blue-600 hover:border-blue-600'>Submit</button>
+                <button onClick={handleReset} className='py-2 px-3 rounded text-white bg-gray-600 hover:bg-white hover:border hover:text-black'>Reset</button>
+                <button onClick={handleBookSubmit} className='py-2 px-3 rounded text-white bg-blue-600 ms-3 hover:bg-white hover:border hover:text-blue-600 hover:border-blue-600'>Submit</button>
               </div>
             </div>
           </div>
@@ -190,6 +251,18 @@ const Profile = () => {
       </div>
 
       <Footer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </>
   )
 }

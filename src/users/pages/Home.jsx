@@ -1,12 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
+import { getHomeBookAPI } from '../../services/allAPI'
 
 
 const Home = () => {
+    const [homeBooks, setHomeBooks] = useState([])
+
+    useEffect(() => {
+        getHomeBooks()
+    }, [])
+
+    console.log(homeBooks);
+    
+
+    const getHomeBooks = async () => {
+        try {
+            const result = await getHomeBookAPI()
+            if (result.status == 200) {
+                setHomeBooks(result.data)
+            }
+        } catch (err) {
+            console.log(err);
+            
+        }
+    }
     return (
         <>
             <Header />
@@ -17,7 +38,7 @@ const Home = () => {
                     <p>Give your family and friends a Book</p>
                     <div className='mt-9'>
                         <input className=' p-2 rounded-3xl bg-white placeholder-gray-500 w-100' type="text" placeholder='Search Books Here....' />
-                        <FontAwesomeIcon className=' text-blue-500' icon={faMagnifyingGlass} style={{marginLeft:"-40px"}}/>
+                        <FontAwesomeIcon className=' text-blue-500' icon={faMagnifyingGlass} style={{ marginLeft: "-40px" }} />
                     </div>
                 </div>
             </div>
@@ -26,16 +47,23 @@ const Home = () => {
                 <h4 className='text-2xl font-bold'>NEW ARRIVAL</h4>
                 <h1 className='text-3xl text-center'>Explore Our Latest Collection</h1>
                 <div className="md:grid grid-cols-4 w-full mt-5">
+                  {  
+                  homeBooks.length>0?
+                  homeBooks?.map((books, index)=>(
                     <div className="p-3">
-                        <div className="shadow p-3 rounded">
-                            <img width={'100%'} height={'300px'} src="https://m.media-amazon.com/images/I/617lxveUjYL._UF1000,1000_QL80_.jpg" alt="book" />
+                        <div key={index} className="shadow p-3 rounded">
+                            <img width={'100%'} height={'300px'} src={books?.imageUrl} alt="book" />
                             <div className="flex flex-col justify-center items-center mt-4">
-                                <p className="text-blue-700 font-bold text-lg">Author</p>
-                                <p>Book Title</p>
-                                <p>$ 400</p>
+                                <p className="text-blue-700 font-bold text-lg">{books?.author}</p>
+                                <p>{books?.title}</p>
+                                <p>Rs {books?.discountPrice}</p>
                             </div>
                         </div>
                     </div>
+                  ))
+                    :
+                    <p>Loading...</p>
+                    }
                 </div>
                 <div className="text-center my-5">
                     <Link to='/all-books' className='text-white p-3 border bg-slate-900'>Explore More...</Link>

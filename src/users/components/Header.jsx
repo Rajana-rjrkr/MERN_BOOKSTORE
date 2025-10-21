@@ -11,7 +11,7 @@ const Header = () => {
     const [userDp, setUserDp] = useState("")
     const [dropDownStatus, setDropDownStatus] = useState(false)
     const navigate = useNavigate()
-    
+
     useEffect(() => {
         if (sessionStorage.getItem("token")) {
             const token = sessionStorage.getItem("token")
@@ -25,7 +25,7 @@ const Header = () => {
         sessionStorage.clear()
         setToken("")
         setUserDp("")
-        setdropDownStatus(false)
+        setDropDownStatus(false)
         navigate('/')
     }
 
@@ -53,7 +53,7 @@ const Header = () => {
                         :
                         <div className='relative inline-block text-left'>
                             <button onClick={() => setDropDownStatus(!dropDownStatus)} className='w-full px-3 py-2 bg-white shadow-xs hover:bg-gray-50'>
-                                <img width={'40px'} src={userDp == "" ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" : userDp.startsWith("https://lh3.googleusercontent.com")?userDp:"https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" } alt="user" />
+                                <img width={'40px'} src={userDp == "" ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" : userDp.startsWith("https://lh3.googleusercontent.com") ? userDp : "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"} alt="user" />
                             </button>
                             {dropDownStatus &&
                                 <div className='absolute right-0 z-10 mt-2 w-40 origin-top-right bg-white shadow-lg ring-1 rounded-md ring-black/5 focus:outline-hidden'>
@@ -73,7 +73,46 @@ const Header = () => {
                 <div className="flex justify-between items-center md:hidden">
                     <button onClick={() => setListStatus(!listStatus)}><FontAwesomeIcon icon={faBars} /></button>
                     {/* login link      */}
-                    <Link to={'/login'}><button className='border border-white rounded px-3 py-2 ms-3 hover:bg-white  hover:text-black'><FontAwesomeIcon icon={faUser} className='me-2' />Login</button></Link>
+                    {!token ? (
+                        <Link to={'/login'}>
+                            <button className='border border-white rounded px-3 py-2 hover:bg-white hover:text-black'>
+                                <FontAwesomeIcon icon={faUser} className='me-2' />Login
+                            </button>
+                        </Link>
+                    ) : (
+                        <div className='relative'>
+                            <button
+                                onClick={() => setDropDownStatus(!dropDownStatus)}
+                                className='px-3 py-2 bg-white text-black rounded-md'
+                            >
+                                <img
+                                    width={'35px'}
+                                    className='rounded-full'
+                                    src={
+                                        userDp === ""
+                                            ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"
+                                            : userDp.startsWith("https://lh3.googleusercontent.com")
+                                                ? userDp
+                                                : "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"
+                                    }
+                                    alt="user"
+                                />
+                            </button>
+                            {dropDownStatus && (
+                                <div className='absolute right-0 z-10 mt-2 w-36 bg-white text-black rounded-md shadow-lg ring-1 ring-black/5'>
+                                    <Link to={'/profile'} className='block px-3 py-2 hover:bg-gray-100'>
+                                        <FontAwesomeIcon icon={faAddressCard} className='me-2' />Profile
+                                    </Link>
+                                    <button
+                                        onClick={logout}
+                                        className='block w-full text-left px-3 py-2 hover:bg-gray-100'
+                                    >
+                                        <FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
                 <ul className={listStatus ? 'flex flex-col' : 'md:flex justify-center items-center hidden font-bold'}>
                     <li className='md:mx-4 mt-3 md:mt-0'><Link to={'/'}>HOME</Link></li>
