@@ -24,7 +24,7 @@ const Profile = () => {
   const [purchaseBooks, setPurchaseBooks] = useState([])
   console.log(purchaseBooks);
   const [username, setUsername] = useState("")
-  const [userDp, setUserDp] = useState("")
+  const [userDp, setUserDp] = useState("") 
 
 
   useEffect(() => {
