@@ -1,21 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { getHomeBookAPI } from '../../services/allAPI'
+import { toast, ToastContainer } from 'react-toastify'
+import { searchBookContext } from '../../contextAPI/ContextShare'
 
 
 const Home = () => {
     const [homeBooks, setHomeBooks] = useState([])
+    const navigate = useNavigate()
+    const { searchKey, setSearchKey } = useContext(searchBookContext)
 
     useEffect(() => {
+        setSearchKey("")
         getHomeBooks()
     }, [])
 
-    console.log(homeBooks);
-    
+    // console.log(homeBooks);
+
+    const searchBook = (bookTitle) => {
+        if (!bookTitle) {
+            toast.warning("Please provide a Book Title Here..")
+        } else if (!sessionStorage.getItem("token")) {
+            toast.warning("Please Login to Search Book")
+            setTimeout(() => {
+                navigate("/login")
+            }, 2500);
+        } else if(sessionStorage.getItem("token") && searchKey){
+            navigate("/all-books")
+        }else{
+            toast.warning("Something went wrong!!")
+        }
+    }
+
+
 
     const getHomeBooks = async () => {
         try {
@@ -25,7 +46,7 @@ const Home = () => {
             }
         } catch (err) {
             console.log(err);
-            
+
         }
     }
     return (
@@ -37,8 +58,8 @@ const Home = () => {
                     <h1 className='text-8xl font-bold'>Wonderful Gifts</h1>
                     <p>Give your family and friends a Book</p>
                     <div className='mt-9'>
-                        <input className=' p-2 rounded-3xl bg-white placeholder-gray-500 w-100' type="text" placeholder='Search Books Here....' />
-                        <FontAwesomeIcon className=' text-blue-500' icon={faMagnifyingGlass} style={{ marginLeft: "-40px" }} />
+                        <input onChange={e => setSearchKey(e.target.value)} className=' p-2 rounded-3xl bg-white text-black placeholder-gray-500 w-100' type="text" placeholder='Search Books Here....' />
+                        <FontAwesomeIcon onClick={searchBook} className=' text-blue-500' icon={faMagnifyingGlass} style={{ marginLeft: "-40px" }} />
                     </div>
                 </div>
             </div>
@@ -47,22 +68,22 @@ const Home = () => {
                 <h4 className='text-2xl font-bold'>NEW ARRIVAL</h4>
                 <h1 className='text-3xl text-center'>Explore Our Latest Collection</h1>
                 <div className="md:grid grid-cols-4 w-full mt-5">
-                  {  
-                  homeBooks.length>0?
-                  homeBooks?.map((books, index)=>(
-                    <div className="p-3">
-                        <div key={index} className="shadow p-3 rounded">
-                            <img width={'100%'} height={'300px'} src={books?.imageUrl} alt="book" />
-                            <div className="flex flex-col justify-center items-center mt-4">
-                                <p className="text-blue-700 font-bold text-lg">{books?.author}</p>
-                                <p>{books?.title}</p>
-                                <p>Rs {books?.discountPrice}</p>
-                            </div>
-                        </div>
-                    </div>
-                  ))
-                    :
-                    <p>Loading...</p>
+                    {
+                        homeBooks.length > 0 ?
+                            homeBooks?.map((books, index) => (
+                                <div className="p-3">
+                                    <div key={index} className="shadow p-3 rounded">
+                                        <img width={'100%'} height={'300px'} src={books?.imageUrl} alt="book" />
+                                        <div className="flex flex-col justify-center items-center mt-4">
+                                            <p className="text-blue-700 font-bold text-lg">{books?.author}</p>
+                                            <p>{books?.title}</p>
+                                            <p>Rs {books?.discountPrice}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                            :
+                            <p>Loading...</p>
                     }
                 </div>
                 <div className="text-center my-5">
@@ -95,6 +116,18 @@ const Home = () => {
 
             </section>
             <Footer />
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </>
     )
 }

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import { googleLoginAPI, loginAPI, registerAPI } from '../services/allAPI'
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 
 const Auth = ({ register }) => {

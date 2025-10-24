@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { Link } from 'react-router-dom'
@@ -6,12 +6,16 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { toast, ToastContainer } from 'react-toastify'
 import { getAllBooksAPI } from '../../services/allAPI'
+import { searchBookContext } from '../../contextAPI/ContextShare'
 
 
 const AllBooks = () => {
   const [listStatus, setListStatus] = useState(false)
   const [token, setToken] = useState("")
   const [abooks, setABooks] = useState([])
+  const [tempBooks, setTempBooks] = useState([])
+  const [allCategories, setAllCategories] = useState([])
+  const {searchKey, setSearchKey} = useContext(searchBookContext)
 
   console.log(abooks);
 
@@ -21,16 +25,22 @@ const AllBooks = () => {
       setToken(userToken)
       getAllBooks(userToken)
     }
-  }, [])
+  }, [searchKey])
 
   const getAllBooks = async (userToken) => {
     const reqHeader = {
       "Authorization": `Bearer ${userToken}`
     }
     try {
-      const result = await getAllBooksAPI(reqHeader)
+      const result = await getAllBooksAPI(searchKey, reqHeader)
       if (result.status == 200) {
         setABooks(result.data)
+        setTempBooks(result.data)
+        const tempCategory = result.data.map(item => item.category)
+        // console.log(tempCategory);
+        const tempArray = [...new Set(tempCategory)]
+        // console.log(tempArray);
+        setAllCategories(tempArray)
       } else {
         console.log(result);
         toast.warning(result.response.data)
@@ -38,6 +48,15 @@ const AllBooks = () => {
     } catch (err) {
       console.log(err);
 
+    }
+  }
+
+  //filter according to book category
+  const filterBooks = (category) => {
+    if (category == "No-Filter") {
+      setABooks(tempBooks)
+    } else {
+      setABooks(tempBooks?.filter(item => item.category.toLowerCase() == category.toLowerCase()))
     }
   }
 
@@ -50,7 +69,7 @@ const AllBooks = () => {
             <div className='flex flex-col my-5 justify-center items-center '>
               <h1 className='text-3xl font-semibold'>Collections</h1>
               <div className="flex my-5">
-                <input type="text" className="p-2 rounded border text-black w-100 placeholder-gray-600" placeholder='Search by Title' />
+                <input value={searchKey} type="text" className="p-2 rounded border text-black w-100 placeholder-gray-600" placeholder='Search by Title' onChange={e => setSearchKey(e.target.value)} />
                 <button className='p-2 text-white bg-blue-700'>Search</button>
               </div>
             </div>
@@ -64,44 +83,21 @@ const AllBooks = () => {
                   <button onClick={() => setListStatus(!listStatus)} className='text-2xl md:hidden'><FontAwesomeIcon icon={faBars} /></button>
                 </div>
                 <div className={listStatus ? 'block' : 'md:block hidden'}>
-                  <div className="mt-3">
-                    <input type="radio" name='filter' id='Literary' />
-                    <label className='ms-3' htmlFor="Literary">Literary Fiction</label>
-                  </div>
+
+                  {
+                    allCategories?.length > 0 &&
+                    allCategories?.map((category, index) => (
+                      <div key={index} className="mt-3">
+                        <input type="radio" name='filter' id={category} onClick={() => filterBooks(category)} />
+                        <label className='ms-3' htmlFor={category}>{category}</label>
+                      </div>
+                    ))
+
+                  }
 
                   <div className="mt-3">
-                    <input type="radio" name='filter' id='Philosophy' />
-                    <label className='ms-3' htmlFor="Philosophy">Philosophy</label>
-                  </div>
-
-                  <div className="mt-3">
-                    <input type="radio" name='filter' id='Romance' />
-                    <label className='ms-3' htmlFor="Romance">Romance</label>
-                  </div>
-
-                  <div className="mt-3">
-                    <input type="radio" name='filter' id='Mystery' />
-                    <label className='ms-3' htmlFor="Mystery">Mystery / Thriller</label>
-                  </div>
-
-                  <div className="mt-3">
-                    <input type="radio" name='filter' id='Horror' />
-                    <label className='ms-3' htmlFor="Horror">Horror</label>
-                  </div>
-
-                  <div className="mt-3">
-                    <input type="radio" name='filter' id='Auto / Biography' />
-                    <label className='ms-3' htmlFor="Auto / Biography">Auto / Biography</label>
-                  </div>
-
-                  <div className="mt-3">
-                    <input type="radio" name='filter' id='Self Help' />
-                    <label className='ms-3' htmlFor="Self Help">Self Help</label>
-                  </div>
-
-                  <div className="mt-3">
-                    <input type="radio" name='filter' id='Politics' />
-                    <label className='ms-3' htmlFor="Politics">Politics</label>
+                    <input type="radio" name='filter' id='No-Filter' onClick={() => filterBooks("No-Filter")} />
+                    <label className='ms-3' htmlFor="No-Filter">No-Filter</label>
                   </div>
                 </div>
               </div>

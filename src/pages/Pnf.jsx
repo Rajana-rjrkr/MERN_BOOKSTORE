@@ -3,6 +3,7 @@ import React from 'react'
 const Pnf = () => {
     return (
         <>
+        
             <div className="w-full h-screen flex flex-col justify-center items-center">
                 <img width={'400'} src="https://assets-v2.lottiefiles.com/a/6915cc2c-1178-11ee-a783-6b784bd85af7/vUmMyG7Nho.gif" alt="" />
                 <p className='text-lg font-bold'>Oh No !</p>
