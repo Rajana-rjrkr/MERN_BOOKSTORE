@@ -3,7 +3,7 @@ import { faAddressCard, faBars, faPowerOff, faUser } from '@fortawesome/free-sol
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
+import SERVERURL from '../../services/serverURL'
 
 const Header = () => {
     const [listStatus, setListStatus] = useState(false)
@@ -53,7 +53,7 @@ const Header = () => {
                         :
                         <div className='relative inline-block text-left'>
                             <button onClick={() => setDropDownStatus(!dropDownStatus)} className='w-full px-3 py-2 bg-white shadow-xs hover:bg-gray-50'>
-                                <img width={'40px'} src={userDp == "" ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" : userDp.startsWith("https://lh3.googleusercontent.com") ? userDp : "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"} alt="user" />
+                                <img width={'40px'} src={userDp == "" ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" : userDp.startsWith("https://lh3.googleusercontent.com") ? userDp : `${SERVERURL}/uploads/${userDp}`} alt="user" />
                             </button>
                             {dropDownStatus &&
                                 <div className='absolute right-0 z-10 mt-2 w-40 origin-top-right bg-white shadow-lg ring-1 rounded-md ring-black/5 focus:outline-hidden'>
@@ -93,7 +93,7 @@ const Header = () => {
                                             ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"
                                             : userDp.startsWith("https://lh3.googleusercontent.com")
                                                 ? userDp
-                                                : "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"
+                                                : `${SERVERURL}/uploads/${userDp}`
                                     }
                                     alt="user"
                                 />

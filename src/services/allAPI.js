@@ -60,8 +60,10 @@ export const removeUserUploadBooksAPI = async (bookId,reqHeader) => {
     return await commonAPI("DELETE", `${SERVERURL}/user-books/${bookId}/remove`, {}, reqHeader)
 }
 
-// profile update
-
+// user - profile update
+export const updateUserProfileAPI = async (reqBody,reqHeader) => {
+    return await commonAPI("PUT", `${SERVERURL}/user-profile/edit`, reqBody, reqHeader)
+}
 
 
 // authorised user api - admin
