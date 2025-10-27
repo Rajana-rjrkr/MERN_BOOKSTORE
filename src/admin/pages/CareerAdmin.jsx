@@ -4,7 +4,7 @@ import Footer from '../../components/Footer'
 import AdminSidebar from '../components/AdminSidebar'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot, faSquareArrowUpRight, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faPlus, faSquareArrowUpRight, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 
 const CareerAdmin = () => {
@@ -31,52 +31,61 @@ const CareerAdmin = () => {
                     {/* contents  */}
                     {
                         jobListStatus &&
-                        <div>
-                            <div className='flex justify-between items-center my-5'>
-                                <div>
-                                    <input type="text" placeholder="Search by Job Title" className="border border-gray-300 text-black w-75 px-3 py-2 rounded-l " />
-                                    <button className="bg-green-600 text-white px-6 py-2 rounded-r hover:bg-green-700">
+                        <div className="w-full p-6 ">
+                            {/* Top Controls */}
+                            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                                {/* Search Section */}
+                                <div className="flex items-center w-full md:w-2/3 bg-white rounded-lg shadow-sm border border-gray-300 overflow-hidden">
+                                    <input type="text" placeholder=" Search by Job Title" className="flex-1 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                                    <button className="bg-green-600 hover:bg-green-700 transition text-white font-medium px-6 py-2">
                                         Search
                                     </button>
                                 </div>
-                                <div>
+
+                                {/* Add Job Button */}
+                                <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-lg shadow-sm transition">
+                                    <FontAwesomeIcon icon={faPlus} />
                                     Add Job
-                                </div>
-                                {/* duplicate job opening */}
+                                </button>
                             </div>
-                            <div className=" md:mx-45 bg-white shadow rounded p-5">
-                                <div className="flex justify-between items-center border-b pb-2 mb-4">
-                                    <h3 className="font-semibold text-lg">Job Title</h3>
-                                    <button className="bg-white-600 text-red-600 px-4 py-2 rounded-md hover:bg-red-700 hover:text-white-500 flex items-center gap-1">
+
+                            {/* Job Card */}
+                            <div className="bg-white shadow-lg hover:shadow-xl transition rounded-xl p-6 border border-gray-200">
+                                <div className="flex justify-between items-center border-b pb-3 mb-4">
+                                    <h3 className="text-xl font-semibold text-gray-800">Job Title</h3>
+                                    <button className="flex items-center gap-2 border border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition px-4 py-2 rounded-lg">
+                                        <FontAwesomeIcon icon={faTrash} />
                                         Delete
-                                        <FontAwesomeIcon size='2x' icon={faTrash} onClick={() => setCareerModal(true)} /></button>
+                                    </button>
                                 </div>
 
                                 {/* Job Details */}
-                                <div className="space-y-2 text-sm text-gray-700">
+                                <div className="grid md:grid-cols-2 gap-y-2 text-sm text-gray-700">
                                     <p className="flex items-center gap-2">
-                                        <FontAwesomeIcon icon={faLocationDot} className="text-blue-500" /> Location
+                                        <FontAwesomeIcon icon={faLocationDot} className="text-blue-500" />
+                                        <span>Bangalore</span>
                                     </p>
                                     <p>
                                         <span className="font-semibold">Job Type:</span> Senior Level
                                     </p>
                                     <p>
-                                        <span className="font-semibold">Salary:</span> 10 lakhs
+                                        <span className="font-semibold">Salary:</span> ₹10 Lakhs
                                     </p>
                                     <p>
-                                        <span className="font-semibold">Qualification:</span> M-Tech /B-Tech/BCA/MCA
+                                        <span className="font-semibold">Qualification:</span> M-Tech / B-Tech / MCA
                                     </p>
                                     <p>
-                                        <span className="font-semibold">Experience:</span> 5-7
+                                        <span className="font-semibold">Experience:</span> 5–7 Years
                                     </p>
                                 </div>
 
                                 {/* Description */}
-                                <p className="mt-4 text-gray-600 text-sm ">
-                                    Description : Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                <p className="mt-4 text-gray-600 leading-relaxed text-sm">
+                                    <span className="font-semibold text-gray-800">Description:</span> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
                                 </p>
                             </div>
                         </div>
+
                     }
 
                     {

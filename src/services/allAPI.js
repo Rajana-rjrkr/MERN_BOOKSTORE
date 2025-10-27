@@ -56,14 +56,23 @@ export const getAllUserPurchasedBooksAPI = async (reqHeader) => {
 }
 
 //remove user upload books - called by profile
-export const removeUserUploadBooksAPI = async (bookId,reqHeader) => {
+export const removeUserUploadBooksAPI = async (bookId, reqHeader) => {
     return await commonAPI("DELETE", `${SERVERURL}/user-books/${bookId}/remove`, {}, reqHeader)
 }
 
 // user - profile update
-export const updateUserProfileAPI = async (reqBody,reqHeader) => {
+export const updateUserProfileAPI = async (reqBody, reqHeader) => {
     return await commonAPI("PUT", `${SERVERURL}/user-profile/edit`, reqBody, reqHeader)
 }
 
 
-// authorised user api - admin
+//-------------------Authorised user api - admin
+//list users - called by admin component (resource admin)
+export const getAllUsersAPI = async (reqHeader) => {
+    return await commonAPI("GET", `${SERVERURL}/all-user`, {}, reqHeader)
+}
+
+//list all books
+export const listAllBooksAPI = async (reqHeader) => {
+    return await commonAPI("GET", `${SERVERURL}/admin-all-books`, {}, reqHeader)
+}
