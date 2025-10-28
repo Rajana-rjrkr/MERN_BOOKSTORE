@@ -15,7 +15,7 @@ const AllBooks = () => {
   const [abooks, setABooks] = useState([])
   const [tempBooks, setTempBooks] = useState([])
   const [allCategories, setAllCategories] = useState([])
-  const {searchKey, setSearchKey} = useContext(searchBookContext)
+  const { searchKey, setSearchKey } = useContext(searchBookContext)
 
   console.log(abooks);
 
@@ -104,21 +104,21 @@ const AllBooks = () => {
 
               {/* Books  */}
               <div className="col-span-3">
-                <div className="md:grid grid-cols-4">
+                <div className="md:grid grid-cols-4 mt-5 md:mt-0">
                   {
                     abooks.length > 0 ?
                       abooks?.map(books => (
-                        <div key={abooks?._id} className="shadow p-3 rounded mx-4 my-3">
+                        <div key={abooks?._id} className="shadow p-3 rounded mx-4 my-3" hidden={books?.status=="Pending" || books?.status=="sold"}>
                           <img width={'100%'} height={'300px'} src={books?.imageUrl} alt="book" />
                           <div className="flex flex-col justify-center items-center">
                             <p className="text-blue-700 font-bold">{books?.author.slice(0, 20)}</p>
                             <p>{books?.title.slice(0, 20)}</p>
-                            <Link to={`/books/${books?._id}/view`} className='border bg-blue-700 p-2 border-none text-white'>View Book</Link>
+                            <Link to={`/books/${books?._id}/view`} className='border w-full text-center mt-4 bg-blue-700 p-2 border-none text-white'>View Book</Link>
                           </div>
                         </div>
                       ))
                       :
-                      <p>No Books</p>
+                      <p className="text-center text-gray-600 col-span-3">No Books...</p>
 
                   }
 

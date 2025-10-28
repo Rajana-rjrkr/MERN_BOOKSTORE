@@ -76,3 +76,8 @@ export const getAllUsersAPI = async (reqHeader) => {
 export const listAllBooksAPI = async (reqHeader) => {
     return await commonAPI("GET", `${SERVERURL}/admin-all-books`, {}, reqHeader)
 }
+
+//approve books- called by admin When approve button click
+export const UpdateBooksStatusAPI = async (reqBody,reqHeader) => {
+    return await commonAPI("PUT", `${SERVERURL}/admin/book/approve`, reqBody, reqHeader)
+}

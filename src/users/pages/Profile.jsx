@@ -26,8 +26,8 @@ const Profile = () => {
   const [purchaseBooks, setPurchaseBooks] = useState([])
   console.log(purchaseBooks);
   const [username, setUsername] = useState("")
-  const [userDp, setUserDp] = useState("") 
-  const {userEditResponse} = useContext(userUpdateContext)
+  const [userDp, setUserDp] = useState("")
+  const { userEditResponse } = useContext(userUpdateContext)
 
   useEffect(() => {
     if (sessionStorage.getItem("token")) {
@@ -296,7 +296,7 @@ const Profile = () => {
                             item?.status == "Approved" ?
                               <img className="w-40  object-contain" src="https://pngimg.com/uploads/approved/approved_PNG1.png" alt="approved" />
                               :
-                              <img className="w-70  object-contain" src="https://psdstamps.com/wp-content/uploads/2020/02/round-rejected-stamp-png.png" alt="Rejected" />}
+                              <img className="w-70  object-contain" src="https://cdn-icons-png.flaticon.com/512/6188/6188726.png" alt="Sold" />}
 
                         </div>
                       </div>

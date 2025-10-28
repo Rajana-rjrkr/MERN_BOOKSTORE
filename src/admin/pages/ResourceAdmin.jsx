@@ -4,7 +4,7 @@ import Footer from '../../components/Footer'
 import AdminSidebar from '../components/AdminSidebar'
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
-import { getAllUsersAPI, listAllBooksAPI } from '../../services/allAPI'
+import { getAllUsersAPI, listAllBooksAPI, UpdateBooksStatusAPI } from '../../services/allAPI'
 import SERVERURL from '../../services/serverURL'
 
 
@@ -12,10 +12,13 @@ const ResourceAdmin = () => {
     const [bookListStatus, setBookListStatus] = useState(true)
     const [usersListStatus, setUsersListStatus] = useState(false)
     const [allUsers, setAllUsers] = useState([])
-     // console.log(allUsers);
+    // console.log(allUsers);
     // const [token, setToken] = useState("")
     const [userBooks, setUserBooks] = useState([])
     // console.log(userBooks);
+    const [updateBookStatus, setUpdateBookStatus] = useState({})
+    console.log(updateBookStatus);
+    
 
     useEffect(() => {
         if (sessionStorage.getItem("token")) {
@@ -29,7 +32,7 @@ const ResourceAdmin = () => {
 
             }
         }
-    }, [usersListStatus, bookListStatus])
+    }, [usersListStatus, bookListStatus, updateBookStatus])
 
     const getAllUsers = async (userToken) => {
         const reqHeader = {
@@ -58,6 +61,24 @@ const ResourceAdmin = () => {
                 setUserBooks(result.data)
             } else {
                 console.log(result);
+            }
+        } catch (err) {
+            console.log(err);
+
+        }
+    }
+
+    const approveBook = async (book) => {
+        const userToken = sessionStorage.getItem("token")
+        const reqHeader = {
+            "Authorization": `Bearer ${userToken}`
+        }
+        try {
+            const result = await UpdateBooksStatusAPI(book, reqHeader)
+            console.log(result);
+            
+            if (result.status == 200) {
+                setUpdateBookStatus(result.data)
             }
         } catch (err) {
             console.log(err);
@@ -95,9 +116,19 @@ const ResourceAdmin = () => {
                                             <div key={index} className="shadow p-3 rounded mx-4">
                                                 <img width={'100%'} height={'300px'} src={book?.imageUrl} alt="book" />
                                                 <div className="flex flex-col justify-center items-center">
-                                                    <p className="text-blue-700 font-bold my-2">{book?.author.slice(0,20)}</p>
-                                                    <p className='mb-2'>{book?.title.slice(0,20)}</p>
-                                                    <Link to={`/books/${book?._id}/view`} className='border bg-blue-700 p-2 border-none text-white'>View Book</Link>
+                                                    <p className="text-blue-700 font-bold ">{book?.author.slice(0, 20)}</p>
+                                                    <p className='font-semibold'>{book?.title.slice(0, 20)}</p>
+                                                    <p className='font-semibold'>Rs {book?.discountPrice}</p>
+                                                    {
+                                                        book?.status == "Pending" &&
+                                                        <button onClick={()=>approveBook(book)} className='border bg-green-700  p-2 w-full mt-2 text-white'>Approve Book</button>
+                                                    }
+                                                    {
+                                                        book?.status == "approved" &&
+                                                        <div className='flex justify-end w-full'>
+                                                            <img width={'40px'} height={'40px'} src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/1200px-Eo_circle_green_checkmark.svg.png" alt="tick mark" />
+                                                        </div>
+                                                    }
                                                 </div>
                                             </div>
                                         ))
