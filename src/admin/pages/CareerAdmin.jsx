@@ -1,19 +1,70 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AdminHeader from '../components/AdminHeader'
 import Footer from '../../components/Footer'
 import AdminSidebar from '../components/AdminSidebar'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot, faPlus, faSquareArrowUpRight, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faTrash } from '@fortawesome/free-solid-svg-icons'
+import AddJob from '../components/AddJob'
+import { getAllJobAPI, removeJobAPI } from '../../services/allAPI'
+import { jobContext } from '../../contextAPI/ContextShare'
 
 
 const CareerAdmin = () => {
+    const { addJobResponse, setAddJobResponse } = useContext(jobContext)
     const [jobListStatus, setJobListStatus] = useState(true)
     const [listApplicationStatus, setListApplicationStatus] = useState(false)
+    const [allJobs, setAllJobs] = useState([])
+    const [searchKey, setSearchKey] = useState("")
+    // console.log(allJobs);
+    const [deleteJobResponse, setDeleteJobResponse] = useState({})
+
+
+    useEffect(() => {
+        if (jobListStatus == true) {
+            getAllJobs()
+        }
+    }, [searchKey, deleteJobResponse,addJobResponse])
+
+    const getAllJobs = async () => {
+        try {
+            const result = await getAllJobAPI(searchKey)
+            if (result.status == 200) {
+                setAllJobs(result.data)
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const removeJob = async (id) => {
+        // const confirmDelete = window.confirm("Are you sure you want to delete this job?");
+        // if (!confirmDelete) return;
+        const token = sessionStorage.getItem("token")
+
+        if (token) {
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+            try {
+                const result = await removeJobAPI(id, reqHeader)
+                if (result.status == 200) {
+                    setDeleteJobResponse(result.data)
+                } else {
+                    console.log(result);
+                }
+            } catch (err) {
+                console.log(err);
+
+            }
+        }
+    }
+
+
     return (
         <>
             <AdminHeader />
-            <div className="md:grid grid-cols-5 gap-2">
+            <div className="md:grid grid-cols-5 ">
                 {/* Admin Sidebar  */}
                 <div className=" col-span-1 ">
                     <AdminSidebar />
@@ -36,54 +87,62 @@ const CareerAdmin = () => {
                             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                                 {/* Search Section */}
                                 <div className="flex items-center w-full md:w-2/3 bg-white rounded-lg shadow-sm border border-gray-300 overflow-hidden">
-                                    <input type="text" placeholder=" Search by Job Title" className="flex-1 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                                    <input onChange={e => setSearchKey(e.target.value)} type="text" placeholder=" Search by Job Title" className="flex-1 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                                     <button className="bg-green-600 hover:bg-green-700 transition text-white font-medium px-6 py-2">
                                         Search
                                     </button>
                                 </div>
 
                                 {/* Add Job Button */}
-                                <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-lg shadow-sm transition">
-                                    <FontAwesomeIcon icon={faPlus} />
-                                    Add Job
-                                </button>
+
+                                <div><AddJob /></div>
+
                             </div>
 
                             {/* Job Card */}
-                            <div className="bg-white shadow-lg hover:shadow-xl transition rounded-xl p-6 border border-gray-200">
-                                <div className="flex justify-between items-center border-b pb-3 mb-4">
-                                    <h3 className="text-xl font-semibold text-gray-800">Job Title</h3>
-                                    <button className="flex items-center gap-2 border border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition px-4 py-2 rounded-lg">
-                                        <FontAwesomeIcon icon={faTrash} />
-                                        Delete
-                                    </button>
-                                </div>
+                            {
+                                allJobs?.length > 0 ?
+                                    allJobs.map(job => (
+                                        <div key={job?._id} className="bg-white mt-10 shadow-lg hover:shadow-xl transition rounded-xl p-6 border border-gray-200">
+                                            <div className="flex justify-between items-center border-b pb-3 mb-4">
+                                                <h3 className="text-xl font-semibold text-gray-800">{job?.title}</h3>
+                                                <button onClick={() => removeJob(job?._id)} className="flex items-center gap-2 border border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition px-4 py-2 rounded-lg">
+                                                    <FontAwesomeIcon icon={faTrash} />
+                                                    Delete
+                                                </button>
+                                            </div>
 
-                                {/* Job Details */}
-                                <div className="grid md:grid-cols-2 gap-y-2 text-sm text-gray-700">
-                                    <p className="flex items-center gap-2">
-                                        <FontAwesomeIcon icon={faLocationDot} className="text-blue-500" />
-                                        <span>Bangalore</span>
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Job Type:</span> Senior Level
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Salary:</span> ₹10 Lakhs
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Qualification:</span> M-Tech / B-Tech / MCA
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Experience:</span> 5–7 Years
-                                    </p>
-                                </div>
+                                            {/* Job Details */}
+                                            <div className="grid md:grid-cols-2 gap-y-2 text-base text-gray-700">
+                                                <p className="flex items-center gap-2">
+                                                    <FontAwesomeIcon icon={faLocationDot} className="text-blue-500" />
+                                                    <span>{job?.location}</span>
+                                                </p>
+                                                <p>
+                                                    <span className="font-semibold">Job Type :</span> {job?.jobType}
+                                                </p>
+                                                <p>
+                                                    <span className="font-semibold">Salary :</span> {job?.salary}
+                                                </p>
+                                                <p>
+                                                    <span className="font-semibold">Qualification :</span> {job?.qualification}
+                                                </p>
+                                                <p>
+                                                    <span className="font-semibold">Experience :</span> {job?.experience}
+                                                </p>
+                                            </div>
 
-                                {/* Description */}
-                                <p className="mt-4 text-gray-600 leading-relaxed text-sm">
-                                    <span className="font-semibold text-gray-800">Description:</span> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-                                </p>
-                            </div>
+                                            {/* Description */}
+                                            <p className="mt-4 text-gray-600 text-justify leading-relaxed text-base">
+                                                <span className="font-semibold text-gray-800">Description :</span> {job?.description}
+                                            </p>
+                                        </div>
+
+                                    ))
+                                    :
+                                    <p>No Job Openings..</p>
+                            }
+
                         </div>
 
                     }

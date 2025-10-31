@@ -150,7 +150,7 @@ const Profile = () => {
           //clear all field
           handleReset()
         } else if (result.status == 200) {
-          toast.success("Book added successfully")
+          toast.success("Book added Successfully. Waiting for Admin approval")
           //clear all field
           handleReset()
         } else {

@@ -12,12 +12,12 @@ export const registerAPI = async (reqBody) => {
     return await commonAPI("POST", `${SERVERURL}/register`, reqBody)
 }
 
-// login
+// login api
 export const loginAPI = async (reqBody) => {
     return await commonAPI("POST", `${SERVERURL}/login`, reqBody)
 }
 
-// google login
+// google login api
 export const googleLoginAPI = async (reqBody) => {
     return await commonAPI("POST", `${SERVERURL}/google-login`, reqBody)
 }
@@ -25,6 +25,11 @@ export const googleLoginAPI = async (reqBody) => {
 // home page books api
 export const getHomeBookAPI = async () => {
     return await commonAPI("GET", `${SERVERURL}/home-books`)
+}
+
+//get all jobs api
+export const getAllJobAPI = async (search) => {
+    return await commonAPI("GET", `${SERVERURL}/all-jobs?search=${search}`)
 }
 
 // all career api
@@ -35,12 +40,12 @@ export const addBookAPI = async (reqBody, reqHeader) => {
     return await commonAPI("POST", `${SERVERURL}/add-book`, reqBody, reqHeader)
 }
 
-// view all books - called by allbooks when page load
+// view all books api - called by allbooks when page load
 export const getAllBooksAPI = async (search, reqHeader) => {
     return await commonAPI("GET", `${SERVERURL}/all-books?search=${search}`, {}, reqHeader)
 }
 
-// view single book - called by view component when it load in browser
+// view single book api - called by view component when it load in browser
 export const getSingleBookAPI = async (bookId, reqHeader) => {
     return await commonAPI("GET", `${SERVERURL}/books/${bookId}/view`, {}, reqHeader)
 }
@@ -66,7 +71,7 @@ export const updateUserProfileAPI = async (reqBody, reqHeader) => {
 }
 
 
-//-------------------Authorised user api - admin
+//-------------------Authorised user api - admin-------------------------------------------------
 //list users - called by admin component (resource admin)
 export const getAllUsersAPI = async (reqHeader) => {
     return await commonAPI("GET", `${SERVERURL}/all-user`, {}, reqHeader)
@@ -78,6 +83,21 @@ export const listAllBooksAPI = async (reqHeader) => {
 }
 
 //approve books- called by admin When approve button click
-export const UpdateBooksStatusAPI = async (reqBody,reqHeader) => {
+export const UpdateBooksStatusAPI = async (reqBody, reqHeader) => {
     return await commonAPI("PUT", `${SERVERURL}/admin/book/approve`, reqBody, reqHeader)
+}
+
+//admin - profile update - called by admin settings component when update button clicked
+export const updateAdminProfileAPI = async (reqBody, reqHeader) => {
+    return await commonAPI("PUT", `${SERVERURL}/admin-profile/edit`, reqBody, reqHeader)
+}
+
+//admin add job api  - called by career admin components when add job button clicked
+export const addJobAPI = async (reqBody, reqHeader) => {
+    return await commonAPI("POST", `${SERVERURL}/admin-job/add`, reqBody, reqHeader)
+}
+
+//admin delete job api - called by career admin 
+export const removeJobAPI = async (jobId, reqHeader) => {
+    return await commonAPI("DELETE", `${SERVERURL}/job/${jobId}/remove`, {}, reqHeader)
 }
