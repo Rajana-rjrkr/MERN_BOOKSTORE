@@ -1,17 +1,19 @@
 import { faPowerOff } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState, useContext } from 'react'
-import { Link,useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import SERVERURL from '../../services/serverURL'
 import { adminUpdateContext } from '../../contextAPI/ContextShare'
+import { userAuthContext } from '../../contextAPI/AuthContext'
 
 const AdminHeader = () => {
+    const { role, authorisedUser,setAuthorisedUser } = useContext(userAuthContext)
     const [token, setToken] = useState("")
     const [adminDp, setadminDp] = useState("")
     const navigate = useNavigate()
     const { adminEditResponse } = useContext(adminUpdateContext)
     const [dropDownStatus, setDropDownStatus] = useState(false)
-
+    
 
     useEffect(() => {
         if (sessionStorage.getItem("token")) {
@@ -24,6 +26,7 @@ const AdminHeader = () => {
 
     const logout = () => {
         sessionStorage.clear()
+        setAuthorisedUser(false)
         setToken("")
         setadminDp("")
         setDropDownStatus(false)
@@ -42,7 +45,7 @@ const AdminHeader = () => {
                 {/* login link      */}
                 {!token ?
                     <div className='flex gap-2 justify-end items-center text-lg sm:text-xl'>
-                        <Link to={'/login'}><button className='border border-black rounded px-3 py-2 ms-3 hover:bg-slate-900 hover:text-white'><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button></Link>
+                        <button onClick={logout} className='border border-black rounded px-3 py-2 ms-3 hover:bg-slate-900 hover:text-white'><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button>
                     </div>
                     :
                     <div>

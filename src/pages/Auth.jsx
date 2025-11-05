@@ -1,13 +1,16 @@
 import { faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import { googleLoginAPI, loginAPI, registerAPI } from '../services/allAPI'
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
+import { userAuthContext } from '../contextAPI/AuthContext'
+
 
 const Auth = ({ register }) => {
+  const { role, authorisedUser,setAuthorisedUser } = useContext(userAuthContext)
   const navigate = useNavigate()
   const [viewPasswordStatus, setViewPasswordStatus] = useState(false)
   const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "" })
@@ -58,6 +61,7 @@ const Auth = ({ register }) => {
           toast.success("Login Succesfully..")
           sessionStorage.setItem("user", JSON.stringify(result.data.user))
           sessionStorage.setItem("token", result.data.token)
+          setAuthorisedUser(true)
           setTimeout(() => {
             if (result.data.user.role == "admin") {
               navigate('/admin-dashboard')
@@ -110,6 +114,7 @@ const Auth = ({ register }) => {
     }
 
   }
+
   return (
     <>
       <div className='w-full min-h-screen bg-cover flex-col bg-center flex justify-center items-center bg-[url(/login5.jpg)]'>

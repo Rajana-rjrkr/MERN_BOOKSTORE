@@ -57,7 +57,7 @@ const Edit = () => {
           }
           const result = await updateUserProfileAPI(reqBody, reqHeader)
           if (result.status == 200) {
-            toast.success("Profile Picture updated completed")
+            // toast.success("Profile Picture updated completed")
             sessionStorage.setItem("user", JSON.stringify(result.data))
             handleReset()
             setOffCanvasStatus(false)
@@ -69,7 +69,7 @@ const Edit = () => {
         } else {
           const result = await updateUserProfileAPI({ username, password, bio, role, profile: existingProfile }, reqHeader)
           if (result.status == 200) {
-            toast.success("Profile Details updated completed")
+            // toast.success("Profile Details updated completed")
             sessionStorage.setItem("user", JSON.stringify(result.data))
             handleReset()
             setOffCanvasStatus(false)
@@ -102,7 +102,7 @@ const Edit = () => {
                   <input onChange={e => handlePictureUpload(e)} type="file" id='profilePic' style={{ display: 'none' }} />
                   {
                     existingProfile == "" ?
-                      <img className='z-52' style={{ width: '100px', height: '100px', borderRadius: '50p%' }} src={preview ? preview : "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Clipart.png"} alt="profile" />
+                      <img className='z-52' style={{ width: '100px', height: '100px', borderRadius: '50p%' }} src={preview ? preview : "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"} alt="profile" />
                       :
                       existingProfile.startsWith("https://lh3.googleusercontent.com") ? <img className='z-52' style={{ width: '100px', height: '100px', borderRadius: '50p%' }} src={preview ? preview : existingProfile} alt="profile" />
                         :

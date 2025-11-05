@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faTrash } from '@fortawesome/free-solid-svg-icons'
 import AddJob from '../components/AddJob'
-import { getAllJobAPI, removeJobAPI } from '../../services/allAPI'
+import { getAllApplicationAPI, getAllJobAPI, removeJobAPI } from '../../services/allAPI'
 import { jobContext } from '../../contextAPI/ContextShare'
 
 
@@ -18,13 +18,17 @@ const CareerAdmin = () => {
     const [searchKey, setSearchKey] = useState("")
     // console.log(allJobs);
     const [deleteJobResponse, setDeleteJobResponse] = useState({})
+    const [application, setApplication] = useState([])
+    console.log(application);
 
 
     useEffect(() => {
         if (jobListStatus == true) {
             getAllJobs()
+        } else if (listApplicationStatus == true) {
+            getApplications()
         }
-    }, [searchKey, deleteJobResponse,addJobResponse])
+    }, [searchKey, deleteJobResponse, addJobResponse, listApplicationStatus])
 
     const getAllJobs = async () => {
         try {
@@ -60,6 +64,23 @@ const CareerAdmin = () => {
         }
     }
 
+    const getApplications = async () => {
+        const token = sessionStorage.getItem("token")
+
+        if (token) {
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+            //api call
+            const result = await getAllApplicationAPI(reqHeader)
+            if (result.status == 200) {
+                setApplication(result.data)
+            } else {
+                console.log(result);
+
+            }
+        }
+    }
 
     return (
         <>
@@ -166,16 +187,24 @@ const CareerAdmin = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td className='text-center border border-gray-500 p-3'>1</td>
-                                        <td className='text-center border border-gray-500 p-3'>Frontend Developer</td>
-                                        <td className='text-center border border-gray-500 p-3'>Max Miller</td>
-                                        <td className='text-center border border-gray-500 p-3'>BCA</td>
-                                        <td className='text-center border border-gray-500 p-3'>max@gmail.com</td>
-                                        <td className='text-center border border-gray-500 p-3'>9876543210</td>
-                                        <td className='text-center border border-gray-500 p-3'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum omnis temporibus unde consectetur, aspernatur ab repellendus quasi at saepe eos.</td>
-                                        <td className='text-center border border-gray-500 p-3'><Link className='text-blue-600 underline'>Resume</Link></td>
-                                    </tr>
+                                    {
+                                        application?.length > 0 ?
+                                            application.map((item, index) =>
+                                                (
+                                                <tr key={item?._id}>
+                                                    <td className='text-center border border-gray-500 p-3'>{index+1}</td>
+                                                    <td className='text-center border border-gray-500 p-3'>{item?.jobTitle}</td>
+                                                    <td className='text-center border border-gray-500 p-3'>{item?.fullname}</td>
+                                                    <td className='text-center border border-gray-500 p-3'>{item?.qualification}</td>
+                                                    <td className='text-center border border-gray-500 p-3'>{item?.email}</td>
+                                                    <td className='text-center border border-gray-500 p-3'>{item?.phone}</td>
+                                                    <td className='text-center border border-gray-500 p-3'>{item?.coverLetter}</td>
+                                                    <td className='text-center border border-gray-500 p-3'><Link className='text-blue-600 underline'>{item?.resume}</Link></td>
+                                                </tr>
+                                                ))
+                                            :
+                                            <tr><p>No Applications are available</p></tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>

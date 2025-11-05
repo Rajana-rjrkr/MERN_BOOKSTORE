@@ -70,6 +70,15 @@ export const updateUserProfileAPI = async (reqBody, reqHeader) => {
     return await commonAPI("PUT", `${SERVERURL}/user-profile/edit`, reqBody, reqHeader)
 }
 
+//add application - called by career user component
+export const addApplicationAPI = async (reqBody, reqHeader) => {
+    return await commonAPI("POST", `${SERVERURL}/application/add`, reqBody, reqHeader)
+}
+
+//make payment 
+export const makePaymentAPI = async (reqBody, reqHeader) => {
+    return await commonAPI("POST", `${SERVERURL}/make-payment`, reqBody, reqHeader)
+}
 
 //-------------------Authorised user api - admin-------------------------------------------------
 //list users - called by admin component (resource admin)
@@ -100,4 +109,9 @@ export const addJobAPI = async (reqBody, reqHeader) => {
 //admin delete job api - called by career admin 
 export const removeJobAPI = async (jobId, reqHeader) => {
     return await commonAPI("DELETE", `${SERVERURL}/job/${jobId}/remove`, {}, reqHeader)
+}
+
+//list all application - called by admin career component
+export const getAllApplicationAPI = async (reqHeader) => {
+    return await commonAPI("GET", `${SERVERURL}/all-applications`, {}, reqHeader)
 }

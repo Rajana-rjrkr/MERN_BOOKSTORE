@@ -4,10 +4,10 @@ import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBackward, faCamera, faEye, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { Link, useParams } from 'react-router-dom'
-import { getSingleBookAPI } from '../../services/allAPI'
+import { getSingleBookAPI, makePaymentAPI } from '../../services/allAPI'
 import { toast, ToastContainer } from 'react-toastify'
 import SERVERURL from '../../services/serverURL'
-
+import { loadStripe } from '@stripe/stripe-js';
 
 const ViewBook = () => {
     const [modalStatus, setModalStatus] = useState(false)
@@ -29,7 +29,7 @@ const ViewBook = () => {
                 const result = await getSingleBookAPI(id, reqHeader)
                 if (result.status == 200) {
                     setSBook(result.data)
-                } else if (result.response.this.state == 401) {
+                } else if (result.status == 401) {
                     toast.warning(result.response.data)
                 } else {
                     console.log(result);
@@ -42,6 +42,31 @@ const ViewBook = () => {
         }
     }
 
+    const handlePayment = async () => {
+        console.log('Inside handlePayment');
+        //stripe object
+        const stripe = await loadStripe('pk_test_51SPbdpC5x4zXg6DqiFiQR76L8yfSYwt75ywIuTk2BOY7n6sjcP0z0rtj6nIXWmiEhfr7q2sCSvKuAqeT3cgzj2Qw00RzdMi0nX');
+        // console.log(stripe);
+        //reqbody - book , reqHeader - token
+        const token = sessionStorage.getItem("token")
+        if (token) {
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+            try {
+                const result = await makePaymentAPI(sBook, reqHeader)
+                console.log(result);
+                const checkoutSessionURL = result.data.checkoutSessionURL
+                if (checkoutSessionURL) {
+                    //redirect
+                    window.location.href = checkoutSessionURL
+                }
+            } catch (err) {
+                console.log(err)
+            }
+
+        }
+    }
     return (
         <>
             <Header />
@@ -62,15 +87,16 @@ const ViewBook = () => {
                                 <p className='font-bold'>Language : {sBook?.languages}</p>
                                 <p className='font-bold'>No of Pages : {sBook?.noOfpages}</p>
                                 <p className='font-bold'>Seller Mail : {sBook?.userMail}</p>
-                                <p className='font-bold'>Real Price : {sBook?.price}</p>
+                                <p className='font-bold'>Real Price : $ {sBook?.price}</p>
                                 <p className='font-bold'>ISBN : {sBook?.isbn}</p>
+                                <p className='font-bold'>Category : {sBook?.category}</p>
                             </div>
                             <div className="md:my-10 my-4">
                                 <p className='text-justify text-lg'>{sBook?.abstract}</p>
                             </div>
                             <div className="flex justify-end">
                                 <Link to={'/all-books'} className='p-2 rounded bg-blue-900 text-white'><FontAwesomeIcon icon={faBackward} className='me-3' />Back</Link>
-                                <button className='p-2 rounded bg-green-900 text-white ms-5'>Buy Rs {sBook?.discountPrice}</button>
+                                <button onClick={handlePayment} className='p-2 rounded bg-green-900 text-white ms-5'>Buy $ {sBook?.discountPrice}</button>
                             </div>
                         </div>
                     </div>
@@ -102,8 +128,8 @@ const ViewBook = () => {
                                                     <img width={'250px'} height={'250px'} className='mx-2' src={`${SERVERURL}/uploads/${img}`} alt="book-images" />
 
                                                 ))
-                                            :
-                                            <p>User uploaded book images are unavailable..</p>
+                                                :
+                                                <p>User uploaded book images are unavailable..</p>
                                         }
                                     </div>
                                 </div>

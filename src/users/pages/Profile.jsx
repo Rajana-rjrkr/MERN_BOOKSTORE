@@ -170,7 +170,7 @@ const Profile = () => {
       <Header />
       <div style={{ height: '200px' }} className="bg-slate-900"></div>
       <div style={{ width: '230px', height: '230px', borderRadius: '50%', marginLeft: '70px', marginTop: '-130PX' }} className="bg-white p-3">
-        <img style={{ width: '200px', height: '200px', borderRadius: '50%' }} src={userDp == "" ? "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Clipart.png" : userDp.startsWith("https://lh3.googleusercontent.com") ? userDp : `${SERVERURL}/uploads/${userDp}`} alt="profile" />
+        <img style={{ width: '200px', height: '200px', borderRadius: '50%' }} src={userDp == "" ? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" : userDp.startsWith("https://lh3.googleusercontent.com") ? userDp : `${SERVERURL}/uploads/${userDp}`} alt="profile" />
       </div>
       <div className="md:flex justify-between px-20 mt-5">
         <div className="flex justify-center items-center">

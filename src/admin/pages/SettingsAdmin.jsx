@@ -15,7 +15,7 @@ const SettingsAdmin = () => {
     const [token, setToken] = useState("")
     const [existingProfile, setExistingProfile] = useState("")
     const [preview, setPreview] = useState("")
-    const {adminEditResponse, setAdminEditResponse} = useContext(adminUpdateContext)
+    const { setAdminEditResponse} = useContext(adminUpdateContext)
 
     console.log(adminDetails);
 
@@ -64,6 +64,7 @@ const SettingsAdmin = () => {
                      if(result.status == 200){
                         toast.success("Profile Updated Succesfully")
                         sessionStorage.setItem("user",JSON.stringify(result.data))
+                        setAdminEditResponse(result.data)
                         handleReset()
                      }else{
                         toast.error("Something went wrong")
